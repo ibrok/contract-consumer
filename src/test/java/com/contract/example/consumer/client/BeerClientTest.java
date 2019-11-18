@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRun
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.HttpClientErrorException;
 
 @SpringBootTest
 @Import(BeerClientTestConfiguration.class)
@@ -50,6 +52,12 @@ class BeerClientTest {
         Order order = new Order(asList(createOrderItem("BLADIEBLA", BeerType.TRIPLE, BigDecimal.valueOf(8.5), 3)));
         String response = sut.order(order);
         assertThat(response).isNotBlank();
+    }
+
+    @Test
+    public void test_postOrder_with_negative_quantity_throws_exception() {
+        Order order = new Order(asList(createOrderItem("BLADIEBLA", BeerType.TRIPLE, BigDecimal.valueOf(8.5), -3)));
+        Assertions.assertThrows(HttpClientErrorException.class, () -> sut.order(order));
     }
 
     private OrderItem createOrderItem(String brand, BeerType type, BigDecimal percentage, int quantity) {
