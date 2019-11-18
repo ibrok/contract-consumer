@@ -1,0 +1,9 @@
+stubrunner:
+  ids:
+    - "com.contract.example:producer-app:+:stubs"
+  stubs-mode: local
+#  stubs-per-consumer: true
+#  consumer-name: "consumerapp"
+
+producer:
+  baseUrl: "http://localhost:8080"
