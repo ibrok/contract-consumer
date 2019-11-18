@@ -29,7 +29,8 @@ public class BeerClient {
     }
 
     public String order(Order order) {
-        return restTemplate.postForObject(baseUrl +"/beer", order, String.class);
+        HttpEntity<Order> httpEntity = new HttpEntity<>(order, createHeaders());
+        return restTemplate.exchange(baseUrl +"/beer", HttpMethod.POST, httpEntity, String.class).getBody();
     }
 
     private HttpHeaders createHeaders() {
